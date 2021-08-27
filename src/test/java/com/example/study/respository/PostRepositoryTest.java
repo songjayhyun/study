@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -93,4 +94,18 @@ public class PostRepositoryTest {
 //        int updateCount = postRepository.updateTitle(4L, "타이틀 테스트");
 //        System.out.println("updateCount = " + updateCount);
 //    }
+
+    @Transactional
+    @Test
+    public void testFindById2() {
+        final Optional<Post> postOptional = postRepository.findById(1L);
+        postOptional.ifPresent(post -> {
+            System.out.println("post : "
+                    +post.getId()+"/"
+                    +post.getTitle()+"/"
+                    +post.getContent()+"/"
+                    +post.getUser().getId()+"/"
+                    +post.getUser().getName());
+        });
+    }
 }
