@@ -1,6 +1,7 @@
 package com.example.study.respository;
 
 import com.example.study.model.entity.Post;
+import com.example.study.model.entity.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class PostRepositoryTest {
         final Post post = Post.builder()
                 .title("test title")
                 .content("test content")
+                .user(User.builder().id(1L).build())
                 .build();
 
         postRepository.save(post);

@@ -11,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,14 +37,21 @@ public class PostController {
     ) {
         log.info("query : " + query);
 
+        for (Post o : postService.getPostList()) {
+            log.info("id={}", o.getUser().getId());
+            log.info("Name={}", o.getUser().getName());
+            log.info("title={}", o.getTitle());
+            log.info("\n");
+        }
+
         return postService.getPostList()
                 .stream()
                 .map(post -> RPost.ListGetRes.builder()
                         .id(post.getId())
                         .title(post.getTitle())
                         .user(RPost.GetUserRes.builder()
-//                                .id(post.getUser().getId())
-//                                .name(post.getUser().getName())
+                                .id(post.getUser().getId())
+                                .name(post.getUser().getName())
                                 .build())
                         .build())
                 .collect(Collectors.toList());
@@ -70,7 +79,7 @@ public class PostController {
     // Post 생성
     @PostMapping("/posts")
     public ResponseEntity<Void> createPost(
-            @RequestBody RPost.CreationReq req
+            @RequestBody @Valid RPost.CreationReq req
     ) {
         req.setUser(signedUser);
 
@@ -102,6 +111,15 @@ public class PostController {
     ) {
         postService.deletePost(id, signedUser);
 
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/posts/{id}/images")
+    public ResponseEntity<Void> savePostImage(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file
+    ) {
+        postService.savePostImage(id, signedUser, file);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

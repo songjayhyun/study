@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 public class RPost {
 
     @Builder
@@ -34,7 +38,11 @@ public class RPost {
 
     @Getter
     public static class CreationReq {
+        @NotNull // null 방지
+        @NotBlank // black + null까지 방지
+        @Pattern(regexp = "^[가-힣\\s]+$") // 원하는 문자 or 숫자만 입력하게끔
         private String title;
+        @NotBlank
         private String content;
         @JsonIgnore // json사용 시 user필드는 무시해라 // user는 null
         @Setter

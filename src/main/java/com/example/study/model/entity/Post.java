@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Post {
+public class Post extends AbstractTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
