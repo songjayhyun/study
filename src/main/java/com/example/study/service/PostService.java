@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -41,6 +42,7 @@ public class PostService {
                 .orElseThrow(() -> ResponseError.NotFound.POST_NOT_EXISTS.getResponseException(id.toString()));
     }
 
+    @Transactional
     public void createPost(final RPost.CreationReq req) {
         final Post post = Post.builder()
                 .title(req.getTitle())
@@ -49,6 +51,8 @@ public class PostService {
                 .build();
 
         postRepository.save(post);
+
+        throw new RuntimeException("test");
     }
 
     public void updatePost(final RPost.ModificationReq req) {

@@ -1,6 +1,7 @@
 package com.example.study.controller;
 
 
+import com.example.study.httpException.ResponseError;
 import com.example.study.model.entity.Post;
 import com.example.study.model.entity.User;
 import com.example.study.req.RPost;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +35,13 @@ public class PostController {
     // @RequestMapping(method = RequestMethod.GET, value = "/posts")
     @GetMapping("/posts")
     public List<RPost.ListGetRes> getPostList(
-            @RequestParam(value = "query", required = false) String query
+            @RequestParam(value = "query", required = false) String query,
+            HttpSession session
     ) {
+        if(session.getAttribute("isVisit") != null) {
+            throw ResponseError.BadRequest.BAD_REQUEST.getResponseException();
+        }
+        session.setAttribute("isVisit", "visit");
         log.info("query : " + query);
 
         for (Post o : postService.getPostList()) {
